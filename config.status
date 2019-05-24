@@ -431,7 +431,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/jarvif/auto'
+ac_pwd='/home/jarvif/automake'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -641,12 +641,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]=""
-S["install_sh"]="${SHELL} /home/jarvif/auto/install-sh"
-S["MAKEINFO"]="${SHELL} /home/jarvif/auto/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/jarvif/auto/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /home/jarvif/auto/missing automake-1.15"
-S["AUTOCONF"]="${SHELL} /home/jarvif/auto/missing autoconf"
-S["ACLOCAL"]="${SHELL} /home/jarvif/auto/missing aclocal-1.15"
+S["install_sh"]="${SHELL} /home/jarvif/automake/install-sh"
+S["MAKEINFO"]="${SHELL} /home/jarvif/automake/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/jarvif/automake/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/jarvif/automake/missing automake-1.15"
+S["AUTOCONF"]="${SHELL} /home/jarvif/automake/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/jarvif/automake/missing aclocal-1.15"
 S["VERSION"]="1.0"
 S["PACKAGE"]="jarvif"
 S["CYGPATH_W"]="echo"
