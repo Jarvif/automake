@@ -12,7 +12,7 @@
 #include "spi.h"
 int main(int argc,char *argv[])
 {
-	int a = sum(4,1);
+	int a = sum(5,1);
 	printf("a:%d\nhello world\n",a);
 	return 0;
 
