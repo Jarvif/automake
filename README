@@ -1,0 +1,99 @@
+自动生成makefile工程文件方法,步骤如下：
+
+1.建立多级工程目录doc,source,include,library,output等目录
+
+2.运行autoscan产生configure.scan，并重命名configure.scan为configure.ac
+
+3.修改configure.ac文件如下:
+
+#               -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+	AC_PREREQ([2.69])								#actoscan软件版本
+	AC_INIT(jarvif, 1.0, 474418595@qq.com)			#本工程打包压缩后的文件包名字,版本号,bug报告邮箱
+	AC_CONFIG_SRCDIR([source/main/main.c])			#main主函数所在的文件目录
+#AC_CONFIG_HEADERS([config.h])
+	AM_INIT_AUTOMAKE								#这个宏作用不清楚，应该是使用自动生成的标志吧，加上
+
+# Checks for programs.
+	AC_PROG_CXX										#GCC编译用到的宏
+	AC_PROG_CC										#默认GCC编译器，不更改
+	AC_PROG_RANLIB									#把各级源文件编译成静态库后，再进行链接的宏，必须打开
+	
+# Checks for libraries.
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+	#自动生成Makefile的目录，需要编译的各级目录都需要写上去，除了一些不用编译的子目录并且该子目录不存在需要编	   译的子目录，例如本工程的source/uart就不需要加进来编译.
+	AC_OUTPUT(Makefile source/Makefile source/spi/Makefile source/i2c/Makefile source/main/Makefile)
+
+4.运行aclocal和autoconf
+
+5.建立各个目录的Makefile.am文件(需要编译的目录，或者包含有需要编译子目录的也要建立)
+
+  a.auto目录下的Makefile.am如下:
+		AUTOMAKE_OPTIONS=foreign  #automake提供了三种软件等级：foreign、gnu和gnits，让用 户选择采用，默认等级									为gnu。在本例使用foreign等级，它只检测必须的文件
+		SUBDIRS=source			  #本目录的直接下级目录source需要编译
+		EXTRA_DIST=doc/userguide  #doc/userguide不需要编译，但要发布该文件。如果有多个文件，则用空格分开。
+		
+		#获取当前路径，并增加查找的头文件路径(理论上这种方式也可以添加-L库函数路径，不过没尝试)
+		CURRENTPATH=$(shell /bin/pwd)  
+	    INCLUDES=-I$(CURRENTPATH)/source/spi -I$(CURRENTPATH)/source/i2c -I$(CURRENTPATH)/source/lcd
+	    export INCLUDES 
+  
+  b.source目录下的Makefile.am如下：
+		AUTOMAKE_OPTIONS=foreign  
+		SUBDIRS=main spi i2c		#本目录的直接下级目录需要编译的路劲，这里只测试这三个目录
+
+  c.main主函数文件目录下的Makefile.am如下:
+	AUTOMAKE_OPTIONS=foreign
+    SUBDIRS=../spi ../i2c		#../spi与../i2c目录需要编译
+	bin_PROGRAMS=main			#本目录的文件编译成可执行文件main。如有多个，用空格分开。然后在下面分别写它们								   的SOURCE和LDADD。
+	main_SOURCES=main.c			#编译main需要的源文件列表，如有多个，用空格分开。
+	main_LDADD=../i2c/libi2c.a ../spi/libspi.a #编译main需要的库文件列表。如有多个，用空格分开。
+
+
+  c.spi子目录下的Makefile.am如下:
+		
+		AUTOMAKE_OPTIONS=foreign
+		noinst_LIBRARIES=libspi.a   #本目录下的代码编译成libhello.a库。不需要发布。如果需要发布，则写成bin_LIB										RARIES。注意，库的名称格式必需为 libxxx.a。因为编译静态库，configure.in										  需要定义AC_PROG_RANLIB宏。
+		libspi_a_SOURCES=spi.c		#编译libspi.a需要的源文件。注意将库名称中的'.'号改成'_'号.
+
+  d.i2c子目录的Makefile.am与spi的类似，这里不做描述
+
+
+  e.其他有多层复杂目录的套路，跟上面一样，以此类推
+
+
+6.以上几个Makefile.am都书写完毕后，运行automake --add-missing
+
+7.运行./configure，默认使用gcc编译。如果需要交叉编译则，则运行./configure CC=arm-none-linux-gnueabi-gcc
+
+8.运行make,在main.c目录下生成了可执行文件
+
+9.make install 安装文件，其实只是把main可执行文件拷贝到/usr/local/bin目录下
+
+10.make clean 清除中间文件
+
+11.make dist  当前文件打包成jarvif-1.0.tar.gz（名字跟版本号是再configure.ac里定义的）
+
+12.其他命令未尝试，待续
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
